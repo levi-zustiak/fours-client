@@ -1,7 +1,8 @@
 {
-  "complierOptions": {
+  "compilerOptions": {
     "baseUrl": "./src",
     "paths": {
+      "@routes/*": ["routes/*"]
     }
   }
 }
