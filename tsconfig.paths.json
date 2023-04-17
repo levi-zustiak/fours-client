@@ -1,0 +1,7 @@
+{
+  "complierOptions": {
+    "baseUrl": "./src",
+    "paths": {
+    }
+  }
+}
