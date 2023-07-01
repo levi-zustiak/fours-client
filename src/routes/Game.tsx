@@ -4,4 +4,9 @@ import { useLocation } from '@solidjs/router';
 
 export function Game() {
   const { state } = useLocation();
+
+  return (
+    <GameContextProvider initialState={state}>
+    </GameContextProvider>
+  );
 }
