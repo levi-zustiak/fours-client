@@ -7,6 +7,7 @@ export function Game() {
 
   return (
     <GameContextProvider initialState={state}>
+      <Board />
     </GameContextProvider>
   );
 }
