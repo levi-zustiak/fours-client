@@ -7,12 +7,14 @@ import { Login } from '@routes/Login';
 import { Play } from '@routes/Play';
 import { Layout } from '@components/Layout';
 import { onMount } from 'solid-js';
+import { AuthProvider, useAuth } from '@contexts/AuthContext';
 
-const RouteGuard = (props) => {
+const RouteGuard = () => {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   onMount(() => {
-    if (!props.authorized) {
+    if (!auth.user) {
       navigate('/login', { replace: true });
     }
   });
@@ -22,18 +24,20 @@ const RouteGuard = (props) => {
 
 export function App() {
   return (
-    <Routes>
-      <Route path="" component={Layout}>
-        <Route path="/" component={Home} />
-        <Route path="/login" component={Login} />
-        <Route path="" element={<RouteGuard authorized={false} />}>
-          <Route path="/play" component={Play} />
-          <Route path="/create" component={Create} />
-          <Route path="/join/:id" component={Join} />
+    <AuthProvider>
+      <Routes>
+        <Route path="" component={Layout}>
+          <Route path="/" component={Home} />
+          <Route path="/login" component={Login} />
+          <Route path="" component={RouteGuard}>
+            <Route path="/play" component={Play} />
+            <Route path="/create" component={Create} />
+            <Route path="/join/:id" component={Join} />
+          </Route>
+          <Route path="/game/:id" component={Game} />
         </Route>
-        <Route path="/game/:id" component={Game} />
-      </Route>
-      <Route path="*" element={() => <div>Page not found</div>} />
-    </Routes>
+        <Route path="*" element={() => <div>Page not found</div>} />
+      </Routes>
+    </AuthProvider>
   );
 }
