@@ -5,7 +5,6 @@ export function Create() {
   const { state, create } = useLobby();
 
   createEffect(() => create());
-  console.log(state);
 
   return (
     <div>
