@@ -6,8 +6,10 @@ import { Game } from '@routes/Game';
 import { Login } from '@routes/Login';
 import { Play } from '@routes/Play';
 import { Layout } from '@components/Layout';
-import { onMount } from 'solid-js';
+import { Show, createResource, onMount } from 'solid-js';
 import { AuthProvider, useAuth } from '@contexts/AuthContext';
+import { Profile } from '@routes/Profile';
+import axios from 'axios';
 
 const RouteGuard = () => {
   const navigate = useNavigate();
@@ -19,8 +21,18 @@ const RouteGuard = () => {
     }
   });
 
-  return <Outlet />;
+  return (
+    <Show when={auth.user}>
+      <Outlet />
+    </Show>
+  );
 };
+
+function UserData({ params, location, navigate, data }) {
+  const [user] = createResource(() =>
+    axios.get('http://localhost:3001/auth/profile', { withCredentials: true }),
+  );
+}
 
 export function App() {
   return (
@@ -33,6 +45,7 @@ export function App() {
             <Route path="/play" component={Play} />
             <Route path="/create" component={Create} />
             <Route path="/join/:id" component={Join} />
+            <Route path="/profile" component={Profile} data={UserData} />
           </Route>
           <Route path="/game/:id" component={Game} />
         </Route>

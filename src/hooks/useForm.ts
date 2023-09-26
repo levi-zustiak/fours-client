@@ -1,9 +1,10 @@
 import { createStore } from 'solid-js/store';
-import axios from 'axios';
 
-type Props = any;
+type Props = {
+  onSubmit: () => void;
+};
 
-export function useForm() {
+export function useForm(onSubmit: () => void) {
   const [formState, setFormState] = createStore({
     fields: {},
     errors: {},
@@ -19,16 +20,11 @@ export function useForm() {
     name: fieldName,
     onInput: handleChange,
   });
+
   const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
 
-    const res = axios.post(
-      'http://localhost:3001/auth/login',
-      formState.fields,
-    );
-
-    console.log(res);
-
+    onSubmit(formState.fields);
     // const res = await fetch('localhost:3001/auth/login', {
     //   method: 'POST',
     //   mode: 'no-cors',

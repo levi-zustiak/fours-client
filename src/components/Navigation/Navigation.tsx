@@ -7,6 +7,7 @@ export function Navigation() {
       <div class={styles.links}>
         <A href="/">Home</A>
         <A href="/play">Play</A>
+        <A href="/profile">Profile</A>
       </div>
     </nav>
   );

@@ -3,6 +3,9 @@ import { render } from 'solid-js/web';
 import './index.css';
 import { App } from './App';
 import { Router } from '@solidjs/router';
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
 
 const root = document.getElementById('root');
 

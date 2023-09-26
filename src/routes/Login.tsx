@@ -2,8 +2,11 @@ import { JSXElement } from 'solid-js';
 import { TextField } from '@components/form/TextField';
 import { createStore } from 'solid-js/store';
 import { useForm } from '@hooks/useForm';
+import { useAuth } from '@contexts/AuthContext';
 export function Login(): JSXElement {
-  const { handleSubmit, register } = useForm();
+  const { login } = useAuth();
+  const { handleSubmit, register } = useForm(login);
+
   const [fields, setFields] = createStore({
     name: '',
     password: '',

@@ -14,9 +14,8 @@ type Board = Column[];
 
 type GameState = {
   id: number;
-  p1: any;
-  p2: any;
-  currentPlayer: any;
+  players: Record<string, any>;
+  currentPlayer: string;
   gameOver: boolean;
   board: Board;
 };
@@ -35,8 +34,6 @@ const GameContext = createContext<GameContext | undefined>(undefined);
 
 const GameContextProvider = (props: Props) => {
   const lobby = useLobby();
-
-  console.log(props.initialState);
 
   const [state, setState] = createStore<GameState>(props.initialState);
 
