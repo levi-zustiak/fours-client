@@ -1,15 +1,23 @@
-import { A, Outlet, Route, Routes, useNavigate } from '@solidjs/router';
+import {
+  A,
+  Outlet,
+  Route,
+  Routes,
+  useNavigate,
+  useRouteData,
+} from '@solidjs/router';
 import { Create } from '@routes/Create';
 import { Join } from '@routes/Join';
 import { Home } from '@routes/Home';
 import { Game } from '@routes/Game';
-import { Login } from '@routes/Login';
+import { Login } from '@routes/Auth/Login';
+import { Logout } from '@routes/Auth/Logout';
 import { Play } from '@routes/Play';
 import { Layout } from '@components/Layout';
 import { Show, createResource, onMount } from 'solid-js';
 import { AuthProvider, useAuth } from '@contexts/AuthContext';
 import { Profile } from '@routes/Profile';
-import axios from 'axios';
+import { useRequest } from '@hooks/useRequest';
 
 const RouteGuard = () => {
   const navigate = useNavigate();
@@ -28,10 +36,18 @@ const RouteGuard = () => {
   );
 };
 
+const getUser = async () => {
+  const { get } = useRequest();
+
+  get('/auth/profile');
+
+  return null;
+};
+
 function UserData({ params, location, navigate, data }) {
-  const [user] = createResource(() =>
-    axios.get('http://localhost:3001/auth/profile', { withCredentials: true }),
-  );
+  const [user] = createResource(getUser);
+
+  return user;
 }
 
 export function App() {
@@ -41,6 +57,7 @@ export function App() {
         <Route path="" component={Layout}>
           <Route path="/" component={Home} />
           <Route path="/login" component={Login} />
+          <Route path="/logout" component={Logout} />
           <Route path="" component={RouteGuard}>
             <Route path="/play" component={Play} />
             <Route path="/create" component={Create} />

@@ -1,12 +1,8 @@
+import { useRequest } from '@hooks/useRequest';
+import { useUser } from '@hooks/useUser';
+import { useNavigate } from '@solidjs/router';
 import axios from 'axios';
-import {
-  createContext,
-  createEffect,
-  createSignal,
-  useContext,
-} from 'solid-js';
-
-const USER_KEY = 'fours_user';
+import { createContext, useContext } from 'solid-js';
 
 type User = {
   id: string;
@@ -19,6 +15,7 @@ type Permission = {
 
 type AuthContext = {
   user: User | null;
+  register: () => void;
   login: (fields: { name: string; password: string }) => void;
   logout: () => void;
   permissions?: Permission[];
@@ -27,7 +24,11 @@ type AuthContext = {
 const AuthContext = createContext<AuthContext | undefined>(undefined);
 
 export function AuthProvider(props: any) {
-  const [user, setUser] = createSignal<User | null>(getUser());
+  const { user, setUser, removeUser } = useUser();
+  const navigate = useNavigate();
+  const { post } = useRequest();
+
+  function register() {}
 
   async function login(fields: { name: string }) {
     try {
@@ -36,26 +37,25 @@ export function AuthProvider(props: any) {
         fields,
       );
 
-      setUser(data.user);
-
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      if (typeof data === 'object') {
+        setUser(data.user);
+      }
     } catch (e) {
       console.log(e);
     }
   }
 
   function logout() {
-    localStorage.removeItem(USER_KEY);
-  }
+    const res = post('/auth/logout');
 
-  function getUser(): User | null {
-    const user = localStorage.getItem(USER_KEY);
+    removeUser();
 
-    return user ? JSON.parse(user) : null;
+    navigate('/login', { replace: true });
   }
 
   const value = {
     user: user(),
+    register,
     login,
     logout,
   };
